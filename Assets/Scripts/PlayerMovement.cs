@@ -13,18 +13,14 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float MoveSpeed = 7f;
     [SerializeField] private int JumpForce = 14;
+    [SerializeField] private LayerMask groundMask;
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private BoxCollider2D boxCollider;
 
     private static readonly int AnimState = Animator.StringToHash("AnimationState");
     private MovementState currentMovementState = MovementState.Idle;
-    private bool isJumping;
-
-    public PlayerMovement()
-    {
-        isJumping = true;
-    }
 
     // Start is called before the first frame update
     private void Start()
@@ -32,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -39,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float dirX = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(dirX * MoveSpeed, rb.velocity.y);
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isOnGround())
         {
             rb.velocity = new Vector2(rb.velocity.x, JumpForce);
         }
@@ -67,5 +64,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         animator.SetInteger(AnimState, (int)currentMovementState);
+    }
+
+    private bool isOnGround()
+    {
+        return Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.size,
+            0f, Vector2.down, .1f, groundMask);
     }
 }
