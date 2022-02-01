@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider;
+    public bool IsLevelFinished { private get; set; } = false;
 
     private static readonly int AnimState = Animator.StringToHash("AnimationState");
     private MovementState currentMovementState = MovementState.Idle;
@@ -36,34 +37,36 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        float dirX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(dirX * MoveSpeed, rb.velocity.y);
-        if (Input.GetButtonDown("Jump") && isOnGround())
-        {
-            jumpSoundEffect.Play();
-            rb.velocity = new Vector2(rb.velocity.x, JumpForce);
-        }
-
         currentMovementState = MovementState.Idle;
+        if (!IsLevelFinished)
+        {
+            float dirX = Input.GetAxis("Horizontal");
+            rb.velocity = new Vector2(dirX * MoveSpeed, rb.velocity.y);
+            if (Input.GetButtonDown("Jump") && isOnGround())
+            {
+                jumpSoundEffect.Play();
+                rb.velocity = new Vector2(rb.velocity.x, JumpForce);
+            }
 
-        if (dirX > 0f)
-        {
-            currentMovementState = MovementState.Running;
-            spriteRenderer.flipX = false;
-        }
-        else if (dirX < 0f)
-        {
-            currentMovementState = MovementState.Running;
-            spriteRenderer.flipX = true;
-        }
-        
-        if (rb.velocity.y > .1f)
-        {
-            currentMovementState = MovementState.Jumping;
-        }
-        else if (rb.velocity.y < -.1f)
-        {
-            currentMovementState = MovementState.Falling;
+            if (dirX > 0f)
+            {
+                currentMovementState = MovementState.Running;
+                spriteRenderer.flipX = false;
+            }
+            else if (dirX < 0f)
+            {
+                currentMovementState = MovementState.Running;
+                spriteRenderer.flipX = true;
+            }
+
+            if (rb.velocity.y > .1f)
+            {
+                currentMovementState = MovementState.Jumping;
+            }
+            else if (rb.velocity.y < -.1f)
+            {
+                currentMovementState = MovementState.Falling;
+            }
         }
 
         animator.SetInteger(AnimState, (int)currentMovementState);

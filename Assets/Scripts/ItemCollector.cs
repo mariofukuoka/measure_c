@@ -8,19 +8,22 @@ public class ItemCollector : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private AudioSource collectionSoundEffect;
-    private int collectibleCount = 0;
+    [SerializeField] private GameObject collectionParticles;
+
+    private int colletibleCount = 0;
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("CollectibleItem"))
         {
             collectionSoundEffect.Play();
-            collectibleCount++;
-            Debug.Log("Collected " + collectibleCount + " items");
-            if ($"Score: {collectibleCount}" != text.text)
+            colletibleCount++;
+            Debug.Log("Collected " + colletibleCount + " items");
+            if ($"Score: {colletibleCount}" != text.text)
             {
-                text.text = $"Score: {collectibleCount}";
+                text.text = $"Score: {colletibleCount}";
             }
             Destroy(other.gameObject);
+            Instantiate(collectionParticles, transform.position, transform.rotation);
         }
     }
 }

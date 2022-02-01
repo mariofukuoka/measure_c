@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerLife : MonoBehaviour
+public class PlayerLife : MonoBehaviour, IDamageable
 {
     private Animator animator;
     private static readonly int Death = Animator.StringToHash("Death");
@@ -20,13 +20,13 @@ public class PlayerLife : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Spikes"))
+        if (other.gameObject.CompareTag("Spikes") || other.gameObject.CompareTag("KillPlane"))
         {
             Die();
         }
     }
 
-    private void Die()
+    public void Die()
     {
         deathSoundEffect.Play();
         rigidBody.bodyType = RigidbodyType2D.Static;
@@ -37,5 +37,10 @@ public class PlayerLife : MonoBehaviour
     {
         Debug.Log("Respawned");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void OnDamage(float damageAmount, GameObject damageSource)
+    {
+        Debug.Log($"Received {damageAmount} from source {gameObject.name}");
     }
 }

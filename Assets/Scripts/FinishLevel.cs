@@ -18,11 +18,11 @@ public class FinishLevel : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Triggered");
-        if (other.gameObject.name == "Player" && !levelFinished)
+        if (other.CompareTag("Player") && !levelFinished)
         {
             finishSound.Play();
             Invoke(nameof(CompleteLevel), 2f);
-            other.attachedRigidbody.bodyType = RigidbodyType2D.Static;
+            other.GetComponent<PlayerMovement>().IsLevelFinished = true;
             levelFinished = true;
         }
     }

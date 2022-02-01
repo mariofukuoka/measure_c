@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CollectibleItem
   - Spikes
+  - KillPlane
   layers:
   - Default
   - TransparentFX
@@ -48,4 +49,7 @@ TagManager:
     locked: 0
   - name: Terrain
     uniqueID: 3693059995
+    locked: 0
+  - name: Over Terrain
+    uniqueID: 3400997317
     locked: 0
